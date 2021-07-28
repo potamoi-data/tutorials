@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>API Reference</title>
+    <title>Ecommerce use case</title>
 
     <style media="screen">
       .highlight table td { padding: 5px; }
@@ -291,7 +291,7 @@
     </script>
   </head>
 
-  <body class="index" data-languages="[&quot;shell&quot;,&quot;ruby&quot;,&quot;python&quot;,&quot;javascript&quot;]">
+  <body class="index" data-languages="[&quot;sql&quot;,&quot;markdown&quot;]">
     <a href="#" id="nav-button">
       <span>
         NAV
@@ -301,10 +301,8 @@
     <div class="toc-wrapper">
       <img src="images/logo-1e815a84.png" class="logo" alt="" />
         <div class="lang-selector">
-              <a href="#" data-language-name="shell">shell</a>
-              <a href="#" data-language-name="ruby">ruby</a>
-              <a href="#" data-language-name="python">python</a>
-              <a href="#" data-language-name="javascript">javascript</a>
+              <a href="#" data-language-name="sql">sql</a>
+              <a href="#" data-language-name="markdown">markdown</a>
         </div>
         <div class="search">
           <input type="text" class="search" id="input-search" placeholder="Search">
@@ -315,19 +313,58 @@
             <a href="#introduction" class="toc-h1 toc-link" data-title="Introduction">Introduction</a>
           </li>
           <li>
-            <a href="#authentication" class="toc-h1 toc-link" data-title="Authentication">Authentication</a>
-          </li>
-          <li>
-            <a href="#kittens" class="toc-h1 toc-link" data-title="Kittens">Kittens</a>
+            <a href="#create-tables-in-ch" class="toc-h1 toc-link" data-title="Create tables in ch">Create tables in ch</a>
               <ul class="toc-list-h2">
                   <li>
-                    <a href="#get-all-kittens" class="toc-h2 toc-link" data-title="Get All Kittens">Get All Kittens</a>
+                    <a href="#picking-the-right-table-engine" class="toc-h2 toc-link" data-title="Picking the right table engine">Picking the right table engine</a>
                   </li>
                   <li>
-                    <a href="#get-a-specific-kitten" class="toc-h2 toc-link" data-title="Get a Specific Kitten">Get a Specific Kitten</a>
+                    <a href="#column-data-type" class="toc-h2 toc-link" data-title="Column data type">Column data type</a>
                   </li>
                   <li>
-                    <a href="#delete-a-specific-kitten" class="toc-h2 toc-link" data-title="Delete a Specific Kitten">Delete a Specific Kitten</a>
+                    <a href="#sorting-and-primary-key" class="toc-h2 toc-link" data-title="Sorting and primary key">Sorting and primary key</a>
+                  </li>
+                  <li>
+                    <a href="#compression-codecs" class="toc-h2 toc-link" data-title="Compression codecs">Compression codecs</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#insert-data-into-tables" class="toc-h1 toc-link" data-title="Insert data into tables">Insert data into tables</a>
+          </li>
+          <li>
+            <a href="#prepare-for-query-create-views" class="toc-h1 toc-link" data-title="Prepare for query: Create views">Prepare for query: Create views</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#get-latest-current-properties-of-item-using-aggregatingmergetree-engine" class="toc-h2 toc-link" data-title="Get latest/current properties of item using AggregatingMergeTree engine">Get latest/current properties of item using AggregatingMergeTree engine</a>
+                  </li>
+                  <li>
+                    <a href="#get-all-properties-in-one-row-using-array-amp-map-functions" class="toc-h2 toc-link" data-title="Get all properties in one row using Array &amp; Map functions">Get all properties in one row using Array &amp; Map functions</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#query-get-funnel-of-conversion" class="toc-h1 toc-link" data-title="Query: Get funnel of conversion">Query: Get funnel of conversion</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#approach-1-using-summingmergetree-array-amp-map-functions" class="toc-h2 toc-link" data-title="Approach 1: Using SummingMergeTree, Array &amp; Map functions">Approach 1: Using SummingMergeTree, Array &amp; Map functions</a>
+                  </li>
+                  <li>
+                    <a href="#approach-2-using-retention" class="toc-h2 toc-link" data-title="Approach #2: Using retention()">Approach #2: Using retention()</a>
+                  </li>
+                  <li>
+                    <a href="#approach-3-using-sequencecount" class="toc-h2 toc-link" data-title="Approach #3: using sequenceCount()">Approach #3: using sequenceCount()</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#query-get-funnel-by-item-category-etc" class="toc-h1 toc-link" data-title="Query: Get funnel by item, category etc">Query: Get funnel by item, category etc</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#aggregate-to-get-by-item" class="toc-h2 toc-link" data-title="Aggregate to get by item">Aggregate to get by item</a>
+                  </li>
+                  <li>
+                    <a href="#join-with-category-view-to-get-by-category" class="toc-h2 toc-link" data-title="Join with category view to get by category">Join with category view to get by category</a>
                   </li>
               </ul>
           </li>
@@ -336,7 +373,6 @@
           </li>
       </ul>
         <ul class="toc-footer">
-            <li><a href='#'>Sign Up for a Developer Key</a></li>
             <li><a href='https://github.com/slatedocs/slate'>Documentation Powered by Slate</a></li>
         </ul>
     </div>
@@ -344,184 +380,355 @@
       <div class="dark-box"></div>
       <div class="content">
         <h1 id='introduction'>Introduction</h1>
-<p>Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.</p>
+<p>In this tutorial, you will </p>
 
-<p>We have language bindings in Shell, Ruby, Python, and JavaScript! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.</p>
+<ul>
+<li>define the schema</li>
+<li>ingest the data</li>
+<li>analyze the data</li>
+<li>tune clickhouse to optimize performance</li>
+</ul>
 
-<p>This example API documentation page was created with <a href="https://github.com/slatedocs/slate">Slate</a>. Feel free to edit it and use it as a base for your own API&#39;s documentation.</p>
-<h1 id='authentication'>Authentication</h1>
+<p>The <a href="https://www.kaggle.com/retailrocket/ecommerce-dataset">Data</a> contains the clickstream on an ecommerce website. Read the full description of the data before starting.</p>
+
+<p>You must define your use case before you start this exercise. Let&#39;s analyze the data in the following ways:</p>
+
+<ol>
+<li><p>Get funnel of view -&gt; add to cart -&gt; transact</p>
+
+<p>a. for an item</p>
+
+<p>b. for items with a certain property value</p>
+
+<p>c. for a category</p></li>
+<li><p>When/where is conversion the best?</p>
+
+<p>a. Which Time of day, day of week, dates of year</p>
+
+<p>b. Which category</p>
+
+<p>c. Which properties (single key value pair)</p></li>
+<li><p>What is the trend of</p>
+
+<p>a. Views, addition to cart, transactions</p>
+
+<p>b. Conversion %</p></li>
+</ol>
+
 <blockquote>
-<p>To authorize, use this code:</p>
+<p>Create a separate database for this tutorial</p>
 </blockquote>
-<div class="highlight"><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-</code></pre></div><div class="highlight"><pre class="highlight python tab-python"><code><span class="kn">import</span> <span class="nn">kittn</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="p">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-</code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code><span class="c"># With shell, you can just pass the correct header with each request</span>
-curl <span class="s2">"api_endpoint_here"</span> <span class="se">\</span>
-  <span class="nt">-H</span> <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="kd">const</span> <span class="nx">kittn</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">kittn</span><span class="dl">'</span><span class="p">);</span>
-
-<span class="kd">let</span> <span class="nx">api</span> <span class="o">=</span> <span class="nx">kittn</span><span class="p">.</span><span class="nx">authorize</span><span class="p">(</span><span class="dl">'</span><span class="s1">meowmeowmeow</span><span class="dl">'</span><span class="p">);</span>
+<div class="highlight"><pre class="highlight sql tab-sql"><code><span class="k">CREATE</span> <span class="k">DATABASE</span> <span class="n">ecommerce</span><span class="p">;</span>
+<span class="n">USE</span> <span class="n">ecommerce</span><span class="p">;</span> 
 </code></pre></div>
-<blockquote>
-<p>Make sure to replace <code>meowmeowmeow</code> with your API key.</p>
-</blockquote>
+<p>Some important set up tips:</p>
 
-<p>Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our <a href="http://example.com/developers">developer portal</a>.</p>
+<ul>
+<li>Ensure that you start clickhouse client with multi-line and multi-statement enabled: <code>clickhouse-client -mn</code> </li>
+</ul>
+<h1 id='create-tables-in-ch'>Create tables in ch</h1><div class="highlight"><pre class="highlight sql tab-sql"><code><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">ecommerce</span><span class="p">.</span><span class="n">events</span> 
+<span class="p">(</span>
+    <span class="nb">timestamp</span>       <span class="n">DateTime64</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>
+    <span class="n">visitorid</span>       <span class="n">UInt32</span><span class="p">,</span>
+    <span class="n">event</span>           <span class="n">LowCardinality</span><span class="p">(</span><span class="n">String</span><span class="p">),</span>
+    <span class="n">itemid</span>          <span class="n">UInt32</span><span class="p">,</span>
+    <span class="n">transactionid</span>   <span class="n">UInt32</span>
+<span class="p">)</span>
+<span class="n">ENGINE</span> <span class="o">=</span> <span class="n">MergeTree</span>
+<span class="n">PARTITION</span> <span class="k">BY</span> <span class="n">toYYYYMMDD</span><span class="p">(</span><span class="nb">timestamp</span><span class="p">)</span>
+<span class="k">ORDER</span> <span class="k">BY</span> <span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">itemid</span><span class="p">,</span> <span class="nb">timestamp</span><span class="p">)</span>
+<span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">itemid</span><span class="p">);</span>
 
-<p>Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:</p>
-
-<p><code>Authorization: meowmeowmeow</code></p>
-
-<aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
-</aside>
-<h1 id='kittens'>Kittens</h1><h2 id='get-all-kittens'>Get All Kittens</h2><div class="highlight"><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="nf">kittens</span><span class="p">.</span><span class="nf">get</span>
-</code></pre></div><div class="highlight"><pre class="highlight python tab-python"><code><span class="kn">import</span> <span class="nn">kittn</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="p">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="n">kittens</span><span class="p">.</span><span class="n">get</span><span class="p">()</span>
-</code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://example.com/api/kittens"</span> <span class="se">\</span>
-  <span class="nt">-H</span> <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="kd">const</span> <span class="nx">kittn</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">kittn</span><span class="dl">'</span><span class="p">);</span>
-
-<span class="kd">let</span> <span class="nx">api</span> <span class="o">=</span> <span class="nx">kittn</span><span class="p">.</span><span class="nx">authorize</span><span class="p">(</span><span class="dl">'</span><span class="s1">meowmeowmeow</span><span class="dl">'</span><span class="p">);</span>
-<span class="kd">let</span> <span class="nx">kittens</span> <span class="o">=</span> <span class="nx">api</span><span class="p">.</span><span class="nx">kittens</span><span class="p">.</span><span class="kd">get</span><span class="p">();</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">ecommerce</span><span class="p">.</span><span class="n">category_tree</span>
+<span class="p">(</span>
+    <span class="n">categoryid</span>      <span class="n">UInt16</span> <span class="n">Codec</span><span class="p">(</span><span class="n">T64</span><span class="p">),</span>
+    <span class="n">parentid</span>        <span class="n">UInt16</span> <span class="n">Codec</span><span class="p">(</span><span class="n">T64</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">ENGINE</span> <span class="o">=</span> <span class="n">MergeTree</span>
+<span class="k">ORDER</span> <span class="k">BY</span> <span class="p">(</span><span class="n">categoryid</span><span class="p">);</span>
 </code></pre></div>
+<p>When creating a table in clickhouse, the following decisions are important because clickhouse provides you with a lot of options for each.</p>
+
+<ol>
+<li>which table engine to use?</li>
+<li>what datatypes to use?</li>
+<li>what sorting key to use? should your primary key be different from the sorting key?</li>
+<li>can you reduce storage size by from using a compression codec different from the default one for certain columns?</li>
+</ol>
+
+<p>Like all other data warehouses, this decision depends on the shape of data and what kind of queries your use case demands. The data explorer section on the dataset page will come in handy in this.</p>
+<h2 id='picking-the-right-table-engine'>Picking the right table engine</h2><div class="highlight"><pre class="highlight sql tab-sql"><code><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">ecommerce</span><span class="p">.</span><span class="n">item_properties</span>
+<span class="p">(</span>
+    <span class="nb">timestamp</span>       <span class="n">DateTime64</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>
+    <span class="n">itemid</span>          <span class="n">UInt32</span><span class="p">,</span>
+    <span class="n">property</span>        <span class="n">LowCardinality</span><span class="p">(</span><span class="n">String</span><span class="p">),</span>
+    <span class="n">value</span>           <span class="n">String</span><span class="p">,</span>
+    <span class="k">version</span>         <span class="n">UInt32</span> <span class="n">MATERIALIZED</span> <span class="mi">9999999999</span> <span class="o">-</span> <span class="n">toUnixTimestamp</span><span class="p">(</span><span class="nb">timestamp</span><span class="p">)</span> <span class="n">Codec</span><span class="p">(</span><span class="n">Delta</span><span class="p">,</span> <span class="n">LZ4</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">ENGINE</span> <span class="o">=</span> <span class="n">ReplacingMergeTree</span><span class="p">(</span><span class="k">version</span><span class="p">)</span>
+<span class="k">ORDER</span> <span class="k">BY</span> <span class="p">(</span><span class="n">itemid</span><span class="p">,</span> <span class="n">property</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+<span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">(</span><span class="n">itemid</span><span class="p">,</span> <span class="n">property</span><span class="p">);</span>
+</code></pre></div>
+<p>Pre-requisite: In most cases you would be interested in the MergeTree family of table engines. Go through all engines in <a href="https://clickhouse.tech/docs/en/engines/table-engines/mergetree-family/">docs</a>.</p>
+
+<p>For each table consider if a special MergeTree would suit your needs better. For example, are there rows in your table that are an updated version of another row? If yes then ReplacingMergeTree suits your need. When you insert a new row in it, the earlier version of the row is deleted along with inserting the new row.</p>
+<h3 id='replacingmergetree'>ReplacingMergeTree</h3>
+<p>Often, data is stored in a system of record or saas app like salesforce or freshdesk or your own SQL database. The common practice is to take snapshot of such data and ingest it into your data warehouse for analytics, periodically. The <code>item_properties</code> table is like that. New rows are inserted into for every <code>(item, property, snapshot_time)</code> irrespective of whether the property value changed or not. Such tables can grow very quickly because of duplicate rows. You can use ReplacingMergeTree to ingest/store such data. Clickhouse will not increase the table size this way. </p>
+
+<p>We could have used <code>timestamp</code> column as the version argument to the ReplacingMergeTree. Why did we need to create a separate <code>version</code> column? Because when a new row is inserted in the table with the exact same values as the previous snapshot we want to keep the earlier version and discard the new one. This ensures when a property is updated in the system of record, the warehouse stores the closest snapshot time of the change. It can enable point-in-time analytical use cases like how many views did we get for an item with a given property say, a month ago.</p>
+<h2 id='column-data-type'>Column data type</h2>
+<p>UInt, Float, String and DateTime will fulfill most of your needs but here are some other extremely useful types:</p>
+
+<ul>
+<li>LowCardinality: Prefer it over Enum when working with strings. It provides more flexibility in use and often reveals the same or higher efficiency</li>
+<li>Array, Tuple, Map: You will find it very handy when transforming data using views for your common use cases</li>
+</ul>
+
+<p>Note that some data types are case sensitive. For eg, <code>date</code> and <code>Date</code> both are valid types but that is not true for some data types. You can query a <a href="https://clickhouse.tech/docs/en/operations/system-tables/data_type_families/#system_tables-data_type_families">system table</a> to check this for any data type.</p>
+<h2 id='sorting-and-primary-key'>Sorting and primary key</h2>
+<p>Pre-requisite: Read this <a href="https://clickhouse.tech/docs/en/engines/table-engines/mergetree-family/mergetree">primer in docs</a> on how primary and sorting keys are used. </p>
+
+<p>Quoting highlights from the docs:</p>
+
+<ul>
+<li>It is possible to specify a primary key (an expression with values that are written in the index file for each mark) that is different from the sorting key (an expression for sorting the rows in data parts). In this case the primary key expression tuple must be a prefix of the sorting key expression tuple.</li>
+<li>A long primary key will negatively affect the insert performance and memory consumption, but not SELECT queries.</li>
+</ul>
+
+<p>We have added <code>timestamp</code> column to the sorting key in <code>events</code> table and <code>value</code> column in <code>item_properties</code> table because we may filter on those columns in certain queries. But because both these are high cardinality columns that can impact resource utilization. So we can omit them from the primary key.</p>
+<h2 id='compression-codecs'>Compression codecs</h2>
 <blockquote>
-<p>The above command returns JSON structured like this:</p>
+<p>You can filter on <code>table</code> name as you like.</p>
 </blockquote>
-<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">[</span><span class="w">
-  </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Fluffums"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"calico"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Max"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unknown"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
-  </span><span class="p">}</span><span class="w">
-</span><span class="p">]</span><span class="w">
-</span></code></pre></div>
-<p>This endpoint retrieves all kittens.</p>
-<h3 id='http-request'>HTTP Request</h3>
-<p><code>GET http://example.com/api/kittens</code></p>
-<h3 id='query-parameters'>Query Parameters</h3>
+<div class="highlight"><pre class="highlight sql tab-sql"><code><span class="k">SELECT</span>
+    <span class="k">table</span><span class="p">,</span>
+    <span class="n">name</span><span class="p">,</span>
+    <span class="k">sum</span><span class="p">(</span><span class="n">data_compressed_bytes</span><span class="p">)</span> <span class="k">AS</span> <span class="n">comp</span><span class="p">,</span>
+    <span class="k">sum</span><span class="p">(</span><span class="n">data_uncompressed_bytes</span><span class="p">)</span> <span class="k">AS</span> <span class="n">uncomp</span><span class="p">,</span>
+    <span class="n">round</span><span class="p">((</span><span class="n">uncomp</span> <span class="o">/</span> <span class="n">comp</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span> <span class="k">AS</span> <span class="n">comp_ratio</span>
+<span class="k">FROM</span> <span class="k">system</span><span class="p">.</span><span class="n">columns</span>
+<span class="k">WHERE</span> <span class="k">database</span> <span class="o">=</span> <span class="s1">'ecommerce'</span> <span class="k">AND</span> <span class="n">startsWith</span><span class="p">(</span><span class="k">table</span><span class="p">,</span> <span class="s1">'.'</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+<span class="k">GROUP</span> <span class="k">BY</span> <span class="k">table</span><span class="p">,</span> <span class="n">name</span>
+<span class="k">ORDER</span> <span class="k">BY</span> <span class="k">table</span><span class="p">,</span> <span class="n">name</span><span class="p">;</span>
+</code></pre></div>
+<p>Pre-requisite: Read this <a href="https://clickhouse.tech/docs/en/sql-reference/statements/create/table/#codecs">primer in docs</a>.</p>
+
+<p>Try different codecs and decide which one to use based on the compression ratio. Clickhouse has system tables to help you analyze this. Here is the compression I could achieve for one of the tables.</p>
+
 <table><thead>
 <tr>
-<th>Parameter</th>
-<th>Default</th>
-<th>Description</th>
+<th>table</th>
+<th>name</th>
+<th>comp</th>
+<th>uncomp</th>
+<th>comp_ratio</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>include_cats</td>
-<td>false</td>
-<td>If set to true, the result will also include cats.</td>
+<td>item_properties</td>
+<td>itemid</td>
+<td>2117248</td>
+<td>51114948</td>
+<td>24.14</td>
 </tr>
 <tr>
-<td>available</td>
-<td>true</td>
-<td>If set to false, the result will include kittens that have already been adopted.</td>
+<td>item_properties</td>
+<td>property</td>
+<td>6581328</td>
+<td>25586875</td>
+<td>3.89</td>
+</tr>
+<tr>
+<td>item_properties</td>
+<td>timestamp</td>
+<td>32696898</td>
+<td>102229896</td>
+<td>3.13</td>
+</tr>
+<tr>
+<td>item_properties</td>
+<td>value</td>
+<td>104781287</td>
+<td>203559039</td>
+<td>1.94</td>
+</tr>
+<tr>
+<td>item_properties</td>
+<td>version</td>
+<td>22231770</td>
+<td>51114948</td>
+<td>2.3</td>
 </tr>
 </tbody></table>
+<h1 id='insert-data-into-tables'>Insert data into tables</h1><div class="highlight"><pre class="highlight shell"><code>clickhouse-client <span class="nt">--query</span> <span class="s2">"INSERT INTO ecommerce.events FORMAT CSVWithNames"</span> &lt; events.csv
+clickhouse-client <span class="nt">--query</span> <span class="s2">"INSERT INTO ecommerce.item_properties (timestamp, itemid, property, value) FORMAT CSVWithNames"</span> &lt; item_properties_part1.csv
+clickhouse-client <span class="nt">--query</span> <span class="s2">"INSERT INTO ecommerce.item_properties (timestamp, itemid, property, value) FORMAT CSVWithNames"</span> &lt; item_properties_part2.csv
+clickhouse-client <span class="nt">--query</span> <span class="s2">"INSERT INTO ecommerce.category_tree FORMAT CSVWithNames"</span> &lt; category_tree.csv
+</code></pre></div><h1 id='prepare-for-query-create-views'>Prepare for query: Create views</h1><h2 id='get-latest-current-properties-of-item-using-aggregatingmergetree-engine'>Get latest/current properties of item using AggregatingMergeTree engine</h2><div class="highlight"><pre class="highlight sql tab-sql"><code><span class="k">CREATE</span> <span class="n">MATERIALIZED</span> <span class="k">VIEW</span> <span class="n">ecommerce</span><span class="p">.</span><span class="n">item_properties_latest_mv</span>
+<span class="n">ENGINE</span> <span class="o">=</span> <span class="n">AggregatingMergeTree</span><span class="p">()</span>
+<span class="k">ORDER</span> <span class="k">BY</span> <span class="p">(</span><span class="n">itemid</span><span class="p">,</span> <span class="n">property</span><span class="p">)</span>
+<span class="n">POPULATE</span> <span class="k">AS</span> 
+    <span class="k">SELECT</span> 
+        <span class="n">argMaxState</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">timestamp</span><span class="p">)</span> <span class="k">as</span> <span class="n">latest_value</span><span class="p">,</span>
+        <span class="n">maxState</span><span class="p">(</span><span class="nb">timestamp</span><span class="p">)</span> <span class="k">as</span> <span class="n">latest_timestamp</span><span class="p">,</span>
+        <span class="n">itemid</span><span class="p">,</span>
+        <span class="n">property</span>
+    <span class="k">FROM</span> <span class="n">ecommerce</span><span class="p">.</span><span class="n">item_properties</span>
+    <span class="k">GROUP</span> <span class="k">BY</span> <span class="n">itemid</span><span class="p">,</span> <span class="n">property</span><span class="p">;</span>
 
-<aside class="success">
-Remember — a happy kitten is an authenticated kitten!
-</aside>
-<h2 id='get-a-specific-kitten'>Get a Specific Kitten</h2><div class="highlight"><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="nf">kittens</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</code></pre></div><div class="highlight"><pre class="highlight python tab-python"><code><span class="kn">import</span> <span class="nn">kittn</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="p">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="n">kittens</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://example.com/api/kittens/2"</span> <span class="se">\</span>
-  <span class="nt">-H</span> <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="kd">const</span> <span class="nx">kittn</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">kittn</span><span class="dl">'</span><span class="p">);</span>
-
-<span class="kd">let</span> <span class="nx">api</span> <span class="o">=</span> <span class="nx">kittn</span><span class="p">.</span><span class="nx">authorize</span><span class="p">(</span><span class="dl">'</span><span class="s1">meowmeowmeow</span><span class="dl">'</span><span class="p">);</span>
-<span class="kd">let</span> <span class="nx">max</span> <span class="o">=</span> <span class="nx">api</span><span class="p">.</span><span class="nx">kittens</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<span class="k">CREATE</span> <span class="k">VIEW</span> <span class="n">ecommerce</span><span class="p">.</span><span class="n">item_properties_latest</span> <span class="k">AS</span>
+<span class="k">SELECT</span> 
+    <span class="n">argMaxMerge</span><span class="p">(</span><span class="n">latest_value</span><span class="p">)</span> <span class="k">as</span> <span class="n">value</span><span class="p">,</span>
+    <span class="n">maxMerge</span><span class="p">(</span><span class="n">latest_timestamp</span><span class="p">)</span> <span class="k">as</span> <span class="nb">timestamp</span><span class="p">,</span>
+    <span class="n">itemid</span><span class="p">,</span>
+    <span class="n">property</span>
+<span class="k">FROM</span> <span class="n">ecommerce</span><span class="p">.</span><span class="n">item_properties_latest_mv</span>
+<span class="k">GROUP</span> <span class="k">BY</span> <span class="n">itemid</span><span class="p">,</span> <span class="n">property</span><span class="p">;</span>
 </code></pre></div>
-<blockquote>
-<p>The above command returns JSON structured like this:</p>
-</blockquote>
-<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Max"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unknown"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div>
-<p>This endpoint retrieves a specific kitten.</p>
-
-<aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
-<h3 id='http-request-2'>HTTP Request</h3>
-<p><code>GET http://example.com/kittens/&lt;ID&gt;</code></p>
-<h3 id='url-parameters'>URL Parameters</h3>
-<table><thead>
-<tr>
-<th>Parameter</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>ID</td>
-<td>The ID of the kitten to retrieve</td>
-</tr>
-</tbody></table>
-<h2 id='delete-a-specific-kitten'>Delete a Specific Kitten</h2><div class="highlight"><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="nf">kittens</span><span class="p">.</span><span class="nf">delete</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</code></pre></div><div class="highlight"><pre class="highlight python tab-python"><code><span class="kn">import</span> <span class="nn">kittn</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="p">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="n">kittens</span><span class="p">.</span><span class="n">delete</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://example.com/api/kittens/2"</span> <span class="se">\</span>
-  <span class="nt">-X</span> DELETE <span class="se">\</span>
-  <span class="nt">-H</span> <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="kd">const</span> <span class="nx">kittn</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">kittn</span><span class="dl">'</span><span class="p">);</span>
-
-<span class="kd">let</span> <span class="nx">api</span> <span class="o">=</span> <span class="nx">kittn</span><span class="p">.</span><span class="nx">authorize</span><span class="p">(</span><span class="dl">'</span><span class="s1">meowmeowmeow</span><span class="dl">'</span><span class="p">);</span>
-<span class="kd">let</span> <span class="nx">max</span> <span class="o">=</span> <span class="nx">api</span><span class="p">.</span><span class="nx">kittens</span><span class="p">.</span><span class="k">delete</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<p>Pre-requisite: Read docs for <a href="https://clickhouse.tech/docs/en/engines/table-engines/mergetree-family/aggregatingmergetree/">AggregateMergeTree</a></p>
+<h3 id='aggregate-functions'>Aggregate functions</h3>
+<p>Pre-requisite: Read docs for <a href="https://clickhouse.tech/docs/en/sql-reference/data-types/aggregatefunction/">aggregate functions</a> and then <a href="https://clickhouse.tech/docs/en/sql-reference/data-types/simpleaggregatefunction/">simple aggregate functions</a></p>
+<h2 id='get-all-properties-in-one-row-using-array-amp-map-functions'>Get all properties in one row using Array &amp; Map functions</h2><div class="highlight"><pre class="highlight sql tab-sql"><code><span class="k">SET</span> <span class="n">allow_experimental_map_type</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="k">CREATE</span> <span class="n">MATERIALIZED</span> <span class="k">VIEW</span> <span class="n">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">ecommerce</span><span class="p">.</span><span class="n">items_latest</span>
+<span class="n">ENGINE</span> <span class="o">=</span> <span class="k">Join</span><span class="p">(</span><span class="k">ANY</span><span class="p">,</span> <span class="k">INNER</span><span class="p">,</span> <span class="n">id</span><span class="p">)</span>
+<span class="n">POPULATE</span> <span class="k">AS</span> 
+    <span class="k">SELECT</span> 
+        <span class="k">CAST</span> <span class="p">((</span><span class="n">keys</span><span class="p">,</span> <span class="k">values</span><span class="p">),</span> <span class="s1">'Map(String, String)'</span><span class="p">)</span> <span class="k">as</span> <span class="n">properties</span><span class="p">,</span>
+        <span class="n">updated_at</span><span class="p">,</span>
+        <span class="n">itemid</span> <span class="k">as</span> <span class="n">id</span>
+    <span class="k">FROM</span> <span class="p">(</span>
+        <span class="k">SELECT</span>
+            <span class="n">groupArray</span><span class="p">(</span><span class="n">property</span><span class="p">)</span> <span class="k">as</span> <span class="n">keys</span><span class="p">,</span>
+            <span class="n">groupArray</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">as</span> <span class="k">values</span><span class="p">,</span>
+            <span class="k">max</span><span class="p">(</span><span class="nb">timestamp</span><span class="p">)</span> <span class="k">as</span> <span class="n">updated_at</span><span class="p">,</span>
+            <span class="n">itemid</span>
+        <span class="k">FROM</span> <span class="n">ecommerce</span><span class="p">.</span><span class="n">item_properties_latest</span>
+        <span class="k">GROUP</span> <span class="k">BY</span> <span class="n">itemid</span>
+    <span class="p">)</span>
+    <span class="k">ORDER</span> <span class="k">BY</span> <span class="n">id</span><span class="p">;</span>
+</code></pre></div><h3 id='query-settings'>Query settings</h3>
+<p>Since map is an experimental feature, we need to enable a setting to use it. You can set settings at different levels: cluster wide, per user, per session or per query.</p>
+<h3 id='grouparray'>groupArray()</h3><h3 id='join-engine'>Join engine</h3><h1 id='query-get-funnel-of-conversion'>Query: Get funnel of conversion</h1>
+<p>Let&#39;s explore a few approaches of filtering certain rows of a table and aggregating them. In typical data bases/warehouses you only have basic functions like the ones used in approach #1. Clickhouse provides you powerful functions like <code>retention()</code> and <code>sequenceCount()</code> that enable you to analyze click stream data with much simpler SQL queries. You will find that complexity goes down as we go from approach #1 to #3.</p>
+<h2 id='approach-1-using-summingmergetree-array-amp-map-functions'>Approach 1: Using SummingMergeTree, Array &amp; Map functions</h2><div class="highlight"><pre class="highlight sql tab-sql"><code><span class="k">CREATE</span> <span class="n">MATERIALIZED</span> <span class="k">VIEW</span> <span class="n">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">ecommerce</span><span class="p">.</span><span class="n">agg_events_by_item_mv</span>
+<span class="p">(</span>
+    <span class="nv">`itemid`</span> <span class="n">UInt32</span><span class="p">,</span>
+    <span class="nv">`event`</span> <span class="n">LowCardinality</span><span class="p">(</span><span class="n">String</span><span class="p">),</span>
+    <span class="nv">`num_events`</span> <span class="n">UInt32</span><span class="p">,</span>
+    <span class="nv">`num_users`</span> <span class="n">UInt32</span>
+<span class="p">)</span>
+<span class="n">ENGINE</span> <span class="o">=</span> <span class="n">SummingMergeTree</span><span class="p">((</span><span class="n">num_events</span><span class="p">,</span> <span class="n">num_users</span><span class="p">))</span>
+<span class="k">ORDER</span> <span class="k">BY</span> <span class="p">(</span><span class="n">itemid</span><span class="p">,</span> <span class="n">event</span><span class="p">)</span> <span class="n">POPULATE</span> <span class="k">AS</span>
+<span class="k">SELECT</span>
+    <span class="n">itemid</span><span class="p">,</span>
+    <span class="n">event</span><span class="p">,</span>
+    <span class="k">count</span><span class="p">(</span><span class="nb">timestamp</span><span class="p">)</span> <span class="k">AS</span> <span class="n">num_events</span><span class="p">,</span>
+    <span class="n">uniq</span><span class="p">(</span><span class="n">visitorid</span><span class="p">)</span> <span class="k">AS</span> <span class="n">num_users</span>
+<span class="k">FROM</span> <span class="n">ecommerce</span><span class="p">.</span><span class="n">events</span>
+<span class="k">GROUP</span> <span class="k">BY</span> <span class="n">itemid</span><span class="p">,</span> <span class="n">event</span><span class="p">;</span> 
 </code></pre></div>
-<blockquote>
-<p>The above command returns JSON structured like this:</p>
-</blockquote>
-<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"deleted"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">":("</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div>
-<p>This endpoint deletes a specific kitten.</p>
-<h3 id='http-request-3'>HTTP Request</h3>
-<p><code>DELETE http://example.com/kittens/&lt;ID&gt;</code></p>
-<h3 id='url-parameters-2'>URL Parameters</h3>
-<table><thead>
-<tr>
-<th>Parameter</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>ID</td>
-<td>The ID of the kitten to delete</td>
-</tr>
-</tbody></table>
+<p>Step 1. get sum of events and users by event type and item</p>
+<div class="highlight"><pre class="highlight sql tab-sql"><code><span class="k">SET</span> <span class="n">allow_experimental_map_type</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="k">create</span> <span class="k">view</span> <span class="n">agg_events_by_item_in_map</span> <span class="k">as</span>
+<span class="k">select</span>
+    <span class="k">CAST</span> <span class="p">((</span><span class="n">num_events_arr</span><span class="p">.</span><span class="n">event</span><span class="p">,</span> <span class="n">num_events_arr</span><span class="p">.</span><span class="n">num_events</span><span class="p">),</span> <span class="s1">'Map(String, UInt32)'</span><span class="p">)</span> <span class="k">as</span> <span class="n">num_events_map</span><span class="p">,</span>
+    <span class="n">itemid</span>
+<span class="k">from</span> <span class="p">(</span>
+<span class="k">select</span> 
+    <span class="n">groupArray</span><span class="p">((</span><span class="n">event</span><span class="p">,</span> <span class="n">num_events</span><span class="p">))</span> <span class="k">as</span> <span class="n">num_events_arr</span><span class="p">,</span>
+    <span class="n">groupArray</span><span class="p">((</span><span class="n">event</span><span class="p">,</span> <span class="n">num_users</span><span class="p">))</span> <span class="k">as</span> <span class="n">num_users_arr</span><span class="p">,</span>
+    <span class="n">itemid</span>
+<span class="k">from</span> <span class="n">ecommerce</span><span class="p">.</span><span class="n">agg_events_by_item_mv</span>
+<span class="k">group</span> <span class="k">by</span> <span class="n">itemid</span>
+<span class="p">)</span>
+<span class="k">order</span> <span class="k">by</span> <span class="n">itemid</span><span class="p">;</span>
+</code></pre></div>
+<p>Step 2. put it in a map like {&#39;a&#39;: 1,&#39;b&#39;: 9,&#39;c&#39;: 0} </p>
+<div class="highlight"><pre class="highlight sql tab-sql"><code></code></pre></div>
+<p>Step 3. compute conversion ratios using array elements &amp; split array elements into rows</p>
+<h2 id='approach-2-using-retention'>Approach #2: Using retention()</h2><div class="highlight"><pre class="highlight sql tab-sql"><code><span class="k">create</span> <span class="k">view</span> <span class="n">events_funnel_using_retention</span>
+<span class="k">SELECT</span>
+    <span class="n">itemid</span><span class="p">,</span>
+    <span class="k">sum</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">AS</span> <span class="n">r1</span><span class="p">,</span>
+    <span class="k">sum</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="k">AS</span> <span class="n">r2</span><span class="p">,</span>
+    <span class="k">sum</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="k">AS</span> <span class="n">r3</span>
+<span class="k">FROM</span> <span class="p">(</span>
+<span class="k">select</span> 
+    <span class="n">itemid</span><span class="p">,</span>
+    <span class="n">visitorid</span><span class="p">,</span>
+    <span class="n">retention</span><span class="p">(</span><span class="n">event</span> <span class="o">=</span> <span class="s1">'view'</span><span class="p">,</span> <span class="n">event</span> <span class="o">=</span> <span class="s1">'addtocart'</span><span class="p">,</span> <span class="n">event</span> <span class="o">=</span> <span class="s1">'transaction'</span><span class="p">)</span> <span class="k">as</span> <span class="n">r</span>
+<span class="k">from</span> <span class="n">ecommerce</span><span class="p">.</span><span class="n">events</span>
+<span class="k">group</span> <span class="k">by</span> <span class="n">itemid</span><span class="p">,</span> <span class="n">visitorid</span>
+<span class="k">order</span> <span class="k">by</span> <span class="n">itemid</span>
+<span class="p">)</span>
+<span class="k">group</span> <span class="k">by</span> <span class="n">itemid</span>
+<span class="c1">-- order by r3 desc</span>
+<span class="c1">-- limit 5</span>
+<span class="p">;</span>
+</code></pre></div>
+<p>Drawback: it doesn&#39;t take time into consideration. If you bought an item on day N, and you add it to your cart again on day N+1 then it will be contribute to increasing the retention score, whereas it shouldn&#39;t because these two events were part of two different user journeys. The first one finished when the item was bought on day N. Apprack #3 can handle this better.</p>
+<h2 id='approach-3-using-sequencecount'>Approach #3: using sequenceCount()</h2><div class="highlight"><pre class="highlight sql tab-sql"><code><span class="k">create</span> <span class="k">view</span> <span class="n">events_funnel</span> <span class="k">as</span>
+<span class="k">select</span>
+    <span class="n">itemid</span><span class="p">,</span>
+    <span class="n">visitorid</span><span class="p">,</span>
+    <span class="n">countIf</span><span class="p">(</span><span class="nb">timestamp</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="s1">'view'</span><span class="p">)</span> <span class="k">as</span> <span class="n">num_view</span><span class="p">,</span>
+    <span class="n">sequenceCount</span><span class="p">(</span><span class="s1">'(?1)(?2)'</span><span class="p">)(</span>
+        <span class="n">toDateTime</span><span class="p">(</span><span class="nb">timestamp</span><span class="p">),</span> 
+        <span class="n">event</span><span class="o">=</span><span class="s1">'view'</span><span class="p">,</span> 
+        <span class="n">event</span><span class="o">=</span><span class="s1">'addtocart'</span>
+    <span class="p">)</span> <span class="k">as</span> <span class="n">num_addtocart</span><span class="p">,</span>
+    <span class="n">sequenceCount</span><span class="p">(</span><span class="s1">'(?1)(?2)(?3)'</span><span class="p">)(</span>
+        <span class="n">toDateTime</span><span class="p">(</span><span class="nb">timestamp</span><span class="p">),</span> 
+        <span class="n">event</span><span class="o">=</span><span class="s1">'view'</span><span class="p">,</span> 
+        <span class="n">event</span><span class="o">=</span><span class="s1">'addtocart'</span><span class="p">,</span> 
+        <span class="n">event</span><span class="o">=</span><span class="s1">'transaction'</span>
+    <span class="p">)</span> <span class="k">as</span> <span class="n">num_transaction</span>
+<span class="k">from</span> <span class="n">ecommerce</span><span class="p">.</span><span class="n">events</span>
+<span class="k">group</span> <span class="k">by</span> <span class="n">itemid</span><span class="p">,</span> <span class="n">visitorid</span>
+<span class="c1">-- order by num_transaction desc, num_addtocart desc, num_view desc</span>
+<span class="c1">-- limit 5</span>
+<span class="p">;</span>
+</code></pre></div>
+<p>Note: Param #1 of sequenceCount() can&#39;t be a column of data type <code>datetime64</code>. It has to be <code>datetime</code>.</p>
+<h1 id='query-get-funnel-by-item-category-etc'>Query: Get funnel by item, category etc</h1>
+<p>We can now query the <code>events_funnel</code> view to answer all out queries.</p>
+<h2 id='aggregate-to-get-by-item'>Aggregate to get by item</h2><div class="highlight"><pre class="highlight sql tab-sql"><code><span class="k">create</span> <span class="k">view</span> <span class="n">funnel_by_item</span> <span class="k">as</span>
+<span class="k">select</span>
+    <span class="n">itemid</span><span class="p">,</span>
+    <span class="n">round</span><span class="p">(</span><span class="n">sum_addtocart</span><span class="o">/</span><span class="n">sum_view</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="k">as</span> <span class="n">view_to_cart</span><span class="p">,</span>
+    <span class="n">round</span><span class="p">(</span><span class="n">sum_transaction</span><span class="o">/</span><span class="n">sum_addtocart</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="k">as</span> <span class="n">cart_to_trxn</span>
+<span class="k">from</span> <span class="p">(</span>
+<span class="k">select</span>    
+    <span class="n">itemid</span><span class="p">,</span>
+    <span class="k">sum</span><span class="p">(</span><span class="n">num_view</span><span class="p">)</span> <span class="k">as</span> <span class="n">sum_view</span><span class="p">,</span>
+    <span class="k">sum</span><span class="p">(</span><span class="n">num_addtocart</span><span class="p">)</span> <span class="k">as</span> <span class="n">sum_addtocart</span><span class="p">,</span>
+    <span class="k">sum</span><span class="p">(</span><span class="n">num_transaction</span><span class="p">)</span> <span class="k">as</span> <span class="n">sum_transaction</span>
+<span class="k">from</span> <span class="n">events_funnel</span>
+<span class="k">group</span> <span class="k">by</span> <span class="n">itemid</span>
+<span class="p">)</span>
+<span class="c1">-- order by cart_to_trxn desc, view_to_cart desc</span>
+<span class="c1">-- limit 5</span>
+<span class="p">;</span>
+</code></pre></div><h2 id='join-with-category-view-to-get-by-category'>Join with category view to get by category</h2><div class="highlight"><pre class="highlight sql tab-sql"><code><span class="k">create</span> <span class="k">view</span> <span class="n">funnel_by_category</span> <span class="k">as</span>
+<span class="k">select</span> 
+    <span class="n">categoryid</span><span class="p">,</span>
+    <span class="n">round</span><span class="p">(</span><span class="n">sum_addtocart</span><span class="o">/</span><span class="n">sum_view</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="k">as</span> <span class="n">view_to_cart</span><span class="p">,</span>
+    <span class="n">round</span><span class="p">(</span><span class="n">sum_transaction</span><span class="o">/</span><span class="n">sum_addtocart</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="k">as</span> <span class="n">cart_to_trxn</span>
+<span class="k">from</span> <span class="p">(</span>
+<span class="k">select</span>    
+    <span class="n">items_category_latest</span><span class="p">.</span><span class="n">categoryid</span> <span class="k">as</span> <span class="n">categoryid</span><span class="p">,</span>
+    <span class="k">sum</span><span class="p">(</span><span class="n">num_view</span><span class="p">)</span> <span class="k">as</span> <span class="n">sum_view</span><span class="p">,</span>
+    <span class="k">sum</span><span class="p">(</span><span class="n">num_addtocart</span><span class="p">)</span> <span class="k">as</span> <span class="n">sum_addtocart</span><span class="p">,</span>
+    <span class="k">sum</span><span class="p">(</span><span class="n">num_transaction</span><span class="p">)</span> <span class="k">as</span> <span class="n">sum_transaction</span>
+<span class="k">from</span> <span class="n">events_funnel</span> <span class="k">right</span> <span class="k">outer</span> <span class="k">join</span> <span class="n">items_category_latest</span>
+<span class="k">on</span> <span class="n">events_funnel</span><span class="p">.</span><span class="n">itemid</span> <span class="o">=</span> <span class="n">items_category_latest</span><span class="p">.</span><span class="n">id</span> 
+<span class="k">group</span> <span class="k">by</span> <span class="n">categoryid</span>
+<span class="p">)</span>
+<span class="c1">-- order by cart_to_trxn desc, view_to_cart desc</span>
+<span class="c1">-- limit 5</span>
+<span class="p">;</span>
+</code></pre></div>
+<p>Join with table containing latest category definition of each item.</p>
 <h1 id='errors'>Errors</h1>
 <aside class="notice">
 This error section is stored in a separate file in <code>includes/_errors.md</code>. Slate allows you to optionally separate out your docs into many files...just save them to the <code>includes</code> folder and add them to the top of your <code>index.md</code>'s frontmatter. Files are included in the order listed.
@@ -584,10 +791,8 @@ This error section is stored in a separate file in <code>includes/_errors.md</co
       </div>
       <div class="dark-box">
           <div class="lang-selector">
-                <a href="#" data-language-name="shell">shell</a>
-                <a href="#" data-language-name="ruby">ruby</a>
-                <a href="#" data-language-name="python">python</a>
-                <a href="#" data-language-name="javascript">javascript</a>
+                <a href="#" data-language-name="sql">sql</a>
+                <a href="#" data-language-name="markdown">markdown</a>
           </div>
       </div>
     </div>
