@@ -140,26 +140,33 @@ We could have used `timestamp` column as the version argument to the ReplacingMe
 
 ```sql
 SELECT
-    table,
+    type,
     name,
-    sum(data_compressed_bytes) AS comp,
-    sum(data_uncompressed_bytes) AS uncomp,
-    round((uncomp / comp), 2) AS comp_ratio
+    formatReadableSize(sum(data_compressed_bytes)) AS comp,
+    formatReadableSize(sum(data_uncompressed_bytes)) AS uncomp,
+    round((sum(data_uncompressed_bytes) / sum(data_compressed_bytes)), 2) AS comp_ratio
 FROM system.columns
 WHERE database = 'ecommerce' AND table = 'item_properties'
-GROUP BY table, name
-ORDER BY table, name;
+GROUP BY type, name
+ORDER BY comp_ratio;
 ```
 
 ```markdown
-table | name | comp | uncomp | comp_ratio
------ | ---- | ---- | ------ | ----------
-item_properties | itemid | 2117248 | 51114948 | 24.14
-item_properties | property | 6581328 | 25586875 | 3.89
-item_properties | timestamp | 32696898 | 102229896 | 3.13
-item_properties | value | 104781287 | 203559039 | 1.94
-item_properties | version | 22231770 | 51114948 | 2.3
+┌─type───────────────────┬─name──────┬─comp──────┬─uncomp─────┬─comp_ratio─┐
+│ UInt32                 │ itemid    │ 2.02 MiB  │ 48.75 MiB  │      24.14 │
+│ LowCardinality(String) │ property  │ 6.28 MiB  │ 24.40 MiB  │       3.89 │
+│ DateTime64(3)          │ timestamp │ 31.18 MiB │ 97.49 MiB  │       3.13 │
+│ UInt32                 │ version   │ 21.20 MiB │ 48.75 MiB  │       2.30 │
+│ String                 │ value     │ 99.93 MiB │ 194.13 MiB │       1.94 │
+└────────────────────────┴───────────┴───────────┴────────────┴────────────┘
 ```
+<!-- type | name | comp | uncomp | comp_ratio
+----- | ---- | ---- | ------ | ----------
+UInt32 | itemid | 2117248 | 51114948 | 24.14
+LowCardinality(String) | property | 6581328 | 25586875 | 3.89
+DateTime64(3) | timestamp | 32696898 | 102229896 | 3.13
+UInt32 | version | 22231770 | 51114948 | 2.3
+String | value | 104781287 | 203559039 | 1.94 -->
 
 UInt, Float, String and DateTime will fulfill most of your needs but here are some other extremely useful types:
 
