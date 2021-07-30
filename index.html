@@ -333,10 +333,10 @@
             <a href="#insert-data-into-tables" class="toc-h1 toc-link" data-title="Insert data into tables">Insert data into tables</a>
           </li>
           <li>
-            <a href="#prepare-for-query-create-views" class="toc-h1 toc-link" data-title="Prepare for query: Create views">Prepare for query: Create views</a>
+            <a href="#create-views-for-queries" class="toc-h1 toc-link" data-title="Create views for queries">Create views for queries</a>
               <ul class="toc-list-h2">
                   <li>
-                    <a href="#get-latest-current-properties-of-item-using-aggregatingmergetree-engine" class="toc-h2 toc-link" data-title="Get latest/current properties of item using AggregatingMergeTree engine">Get latest/current properties of item using AggregatingMergeTree engine</a>
+                    <a href="#get-latest-current-properties-of-item" class="toc-h2 toc-link" data-title="Get latest/current properties of item">Get latest/current properties of item</a>
                   </li>
                   <li>
                     <a href="#get-all-properties-in-one-row-using-array-amp-map-functions" class="toc-h2 toc-link" data-title="Get all properties in one row using Array &amp; Map functions">Get all properties in one row using Array &amp; Map functions</a>
@@ -347,7 +347,7 @@
             <a href="#query-get-funnel-of-conversion" class="toc-h1 toc-link" data-title="Query: Get funnel of conversion">Query: Get funnel of conversion</a>
               <ul class="toc-list-h2">
                   <li>
-                    <a href="#approach-1-using-summingmergetree-array-amp-map-functions" class="toc-h2 toc-link" data-title="Approach 1: Using SummingMergeTree, Array &amp; Map functions">Approach 1: Using SummingMergeTree, Array &amp; Map functions</a>
+                    <a href="#approach-1-using-summingmergetree-array-amp-map-functions" class="toc-h2 toc-link" data-title="Approach #1: Using SummingMergeTree, Array &amp; Map functions">Approach #1: Using SummingMergeTree, Array &amp; Map functions</a>
                   </li>
                   <li>
                     <a href="#approach-2-using-retention" class="toc-h2 toc-link" data-title="Approach #2: Using retention()">Approach #2: Using retention()</a>
@@ -368,9 +368,6 @@
                   </li>
               </ul>
           </li>
-          <li>
-            <a href="#errors" class="toc-h1 toc-link" data-title="Errors">Errors</a>
-          </li>
       </ul>
         <ul class="toc-footer">
             <li><a href='https://github.com/slatedocs/slate'>Documentation Powered by Slate</a></li>
@@ -380,6 +377,17 @@
       <div class="dark-box"></div>
       <div class="content">
         <h1 id='introduction'>Introduction</h1>
+<blockquote>
+<p>Ensure that you start clickhouse client with multi-line and multi-statement enabled using this bash command.</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell"><code>clickhouse-client <span class="nt">-mn</span>
+</code></pre></div>
+<blockquote>
+<p>Create a separate database for this tutorial.</p>
+</blockquote>
+<div class="highlight"><pre class="highlight sql tab-sql"><code><span class="k">CREATE</span> <span class="k">DATABASE</span> <span class="n">ecommerce</span><span class="p">;</span>
+<span class="n">USE</span> <span class="n">ecommerce</span><span class="p">;</span> 
+</code></pre></div>
 <p>In this tutorial, you will </p>
 
 <ul>
@@ -394,39 +402,23 @@
 <p>You must define your use case before you start this exercise. Let&#39;s analyze the data in the following ways:</p>
 
 <ol>
-<li><p>Get funnel of view -&gt; add to cart -&gt; transact</p>
-
-<p>a. for an item</p>
-
-<p>b. for items with a certain property value</p>
-
-<p>c. for a category</p></li>
-<li><p>When/where is conversion the best?</p>
-
-<p>a. Which Time of day, day of week, dates of year</p>
-
-<p>b. Which category</p>
-
-<p>c. Which properties (single key value pair)</p></li>
-<li><p>What is the trend of</p>
-
-<p>a. Views, addition to cart, transactions</p>
-
-<p>b. Conversion %</p></li>
+<li>Get funnel of view -&gt; add to cart -&gt; transact<br>
+a. for an item<br>
+b. for items with a certain property value<br>
+c. for a category<br></li>
+<li>When/where is conversion the best?<br>
+a. Which Time of day, day of week, dates of year<br>
+b. Which category<br>
+c. Which properties (single key value pair)<br></li>
+<li>What is the trend of<br>
+a. Views, addition to cart, transactions<br>
+b. Conversion %<br></li>
 </ol>
-
+<h1 id='create-tables-in-ch'>Create tables in ch</h1>
 <blockquote>
-<p>Create a separate database for this tutorial</p>
+<p>Use this to create your tables. We shall dive deeper into some of the lines in further sections  </p>
 </blockquote>
-<div class="highlight"><pre class="highlight sql tab-sql"><code><span class="k">CREATE</span> <span class="k">DATABASE</span> <span class="n">ecommerce</span><span class="p">;</span>
-<span class="n">USE</span> <span class="n">ecommerce</span><span class="p">;</span> 
-</code></pre></div>
-<p>Some important set up tips:</p>
-
-<ul>
-<li>Ensure that you start clickhouse client with multi-line and multi-statement enabled: <code>clickhouse-client -mn</code> </li>
-</ul>
-<h1 id='create-tables-in-ch'>Create tables in ch</h1><div class="highlight"><pre class="highlight sql tab-sql"><code><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">ecommerce</span><span class="p">.</span><span class="n">events</span> 
+<div class="highlight"><pre class="highlight sql tab-sql"><code><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">ecommerce</span><span class="p">.</span><span class="n">events</span> 
 <span class="p">(</span>
     <span class="nb">timestamp</span>       <span class="n">DateTime64</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>
     <span class="n">visitorid</span>       <span class="n">UInt32</span><span class="p">,</span>
@@ -438,6 +430,18 @@
 <span class="n">PARTITION</span> <span class="k">BY</span> <span class="n">toYYYYMMDD</span><span class="p">(</span><span class="nb">timestamp</span><span class="p">)</span>
 <span class="k">ORDER</span> <span class="k">BY</span> <span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">itemid</span><span class="p">,</span> <span class="nb">timestamp</span><span class="p">)</span>
 <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">itemid</span><span class="p">);</span>
+
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">ecommerce</span><span class="p">.</span><span class="n">item_properties</span>
+<span class="p">(</span>
+    <span class="nb">timestamp</span>       <span class="n">DateTime64</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>
+    <span class="n">itemid</span>          <span class="n">UInt32</span><span class="p">,</span>
+    <span class="n">property</span>        <span class="n">LowCardinality</span><span class="p">(</span><span class="n">String</span><span class="p">),</span>
+    <span class="n">value</span>           <span class="n">String</span><span class="p">,</span>
+    <span class="k">version</span>         <span class="n">UInt32</span> <span class="n">MATERIALIZED</span> <span class="mi">9999999999</span> <span class="o">-</span> <span class="n">toUnixTimestamp</span><span class="p">(</span><span class="nb">timestamp</span><span class="p">)</span> <span class="n">Codec</span><span class="p">(</span><span class="n">Delta</span><span class="p">,</span> <span class="n">LZ4</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">ENGINE</span> <span class="o">=</span> <span class="n">ReplacingMergeTree</span><span class="p">(</span><span class="k">version</span><span class="p">)</span>
+<span class="k">ORDER</span> <span class="k">BY</span> <span class="p">(</span><span class="n">itemid</span><span class="p">,</span> <span class="n">property</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+<span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">(</span><span class="n">itemid</span><span class="p">,</span> <span class="n">property</span><span class="p">);</span>
 
 <span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">ecommerce</span><span class="p">.</span><span class="n">category_tree</span>
 <span class="p">(</span>
@@ -457,35 +461,79 @@
 </ol>
 
 <p>Like all other data warehouses, this decision depends on the shape of data and what kind of queries your use case demands. The data explorer section on the dataset page will come in handy in this.</p>
-<h2 id='picking-the-right-table-engine'>Picking the right table engine</h2><div class="highlight"><pre class="highlight sql tab-sql"><code><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">ecommerce</span><span class="p">.</span><span class="n">item_properties</span>
-<span class="p">(</span>
-    <span class="nb">timestamp</span>       <span class="n">DateTime64</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>
-    <span class="n">itemid</span>          <span class="n">UInt32</span><span class="p">,</span>
-    <span class="n">property</span>        <span class="n">LowCardinality</span><span class="p">(</span><span class="n">String</span><span class="p">),</span>
-    <span class="n">value</span>           <span class="n">String</span><span class="p">,</span>
-    <span class="k">version</span>         <span class="n">UInt32</span> <span class="n">MATERIALIZED</span> <span class="mi">9999999999</span> <span class="o">-</span> <span class="n">toUnixTimestamp</span><span class="p">(</span><span class="nb">timestamp</span><span class="p">)</span> <span class="n">Codec</span><span class="p">(</span><span class="n">Delta</span><span class="p">,</span> <span class="n">LZ4</span><span class="p">)</span>
-<span class="p">)</span>
-<span class="n">ENGINE</span> <span class="o">=</span> <span class="n">ReplacingMergeTree</span><span class="p">(</span><span class="k">version</span><span class="p">)</span>
-<span class="k">ORDER</span> <span class="k">BY</span> <span class="p">(</span><span class="n">itemid</span><span class="p">,</span> <span class="n">property</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-<span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">(</span><span class="n">itemid</span><span class="p">,</span> <span class="n">property</span><span class="p">);</span>
+<h2 id='picking-the-right-table-engine'>Picking the right table engine</h2>
+<p>Clickhouse provides a genuine variety of table engines unlike other SQL databases. </p>
+<h3 id='mergetree-family'>MergeTree family</h3>
+<blockquote>
+<p>Highlighting the relevant lines from the creation sql snippet</p>
+</blockquote>
+<div class="highlight"><pre class="highlight sql tab-sql"><code><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">ecommerce</span><span class="p">.</span><span class="n">events</span> 
+<span class="p">...</span>
+<span class="n">ENGINE</span> <span class="o">=</span> <span class="n">MergeTree</span>
 </code></pre></div>
 <p>Pre-requisite: In most cases you would be interested in the MergeTree family of table engines. Go through all engines in <a href="https://clickhouse.tech/docs/en/engines/table-engines/mergetree-family/">docs</a>.</p>
 
 <p>For each table consider if a special MergeTree would suit your needs better. For example, are there rows in your table that are an updated version of another row? If yes then ReplacingMergeTree suits your need. When you insert a new row in it, the earlier version of the row is deleted along with inserting the new row.</p>
-<h3 id='replacingmergetree'>ReplacingMergeTree</h3>
+
+<p>HW: Read distributed &amp; replicating merge trees.</p>
+<h3 id='replacingmergetree'>ReplacingMergeTree</h3><div class="highlight"><pre class="highlight sql tab-sql"><code><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">ecommerce</span><span class="p">.</span><span class="n">item_properties</span>
+<span class="p">...</span>
+    <span class="k">version</span>         <span class="n">UInt32</span> <span class="n">MATERIALIZED</span> <span class="mi">9999999999</span> <span class="o">-</span> <span class="n">toUnixTimestamp</span><span class="p">(</span><span class="nb">timestamp</span><span class="p">)</span> <span class="n">Codec</span><span class="p">(</span><span class="n">Delta</span><span class="p">,</span> <span class="n">LZ4</span><span class="p">)</span>
+<span class="p">...</span>
+<span class="n">ENGINE</span> <span class="o">=</span> <span class="n">ReplacingMergeTree</span><span class="p">(</span><span class="k">version</span><span class="p">)</span>
+</code></pre></div>
 <p>Often, data is stored in a system of record or saas app like salesforce or freshdesk or your own SQL database. The common practice is to take snapshot of such data and ingest it into your data warehouse for analytics, periodically. The <code>item_properties</code> table is like that. New rows are inserted into for every <code>(item, property, snapshot_time)</code> irrespective of whether the property value changed or not. Such tables can grow very quickly because of duplicate rows. You can use ReplacingMergeTree to ingest/store such data. Clickhouse will not increase the table size this way. </p>
 
 <p>We could have used <code>timestamp</code> column as the version argument to the ReplacingMergeTree. Why did we need to create a separate <code>version</code> column? Because when a new row is inserted in the table with the exact same values as the previous snapshot we want to keep the earlier version and discard the new one. This ensures when a property is updated in the system of record, the warehouse stores the closest snapshot time of the change. It can enable point-in-time analytical use cases like how many views did we get for an item with a given property say, a month ago.</p>
 <h2 id='column-data-type'>Column data type</h2>
+<blockquote>
+<p>Toggle to markdown tab to see output of this query. Notice the high compression ratio for integer, datetime and low cardinality data types.</p>
+</blockquote>
+<div class="highlight"><pre class="highlight sql tab-sql"><code><span class="k">SELECT</span>
+    <span class="k">table</span><span class="p">,</span>
+    <span class="n">name</span><span class="p">,</span>
+    <span class="k">sum</span><span class="p">(</span><span class="n">data_compressed_bytes</span><span class="p">)</span> <span class="k">AS</span> <span class="n">comp</span><span class="p">,</span>
+    <span class="k">sum</span><span class="p">(</span><span class="n">data_uncompressed_bytes</span><span class="p">)</span> <span class="k">AS</span> <span class="n">uncomp</span><span class="p">,</span>
+    <span class="n">round</span><span class="p">((</span><span class="n">uncomp</span> <span class="o">/</span> <span class="n">comp</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span> <span class="k">AS</span> <span class="n">comp_ratio</span>
+<span class="k">FROM</span> <span class="k">system</span><span class="p">.</span><span class="n">columns</span>
+<span class="k">WHERE</span> <span class="k">database</span> <span class="o">=</span> <span class="s1">'ecommerce'</span> <span class="k">AND</span> <span class="k">table</span> <span class="o">=</span> <span class="s1">'item_properties'</span>
+<span class="k">GROUP</span> <span class="k">BY</span> <span class="k">table</span><span class="p">,</span> <span class="n">name</span>
+<span class="k">ORDER</span> <span class="k">BY</span> <span class="k">table</span><span class="p">,</span> <span class="n">name</span><span class="p">;</span>
+</code></pre></div><div class="highlight"><pre class="highlight markdown tab-markdown"><code>table | name | comp | uncomp | comp_ratio
+----- | ---- | ---- | ------ | ----------
+item_properties | itemid | 2117248 | 51114948 | 24.14
+item_properties | property | 6581328 | 25586875 | 3.89
+item_properties | timestamp | 32696898 | 102229896 | 3.13
+item_properties | value | 104781287 | 203559039 | 1.94
+item_properties | version | 22231770 | 51114948 | 2.3
+</code></pre></div>
 <p>UInt, Float, String and DateTime will fulfill most of your needs but here are some other extremely useful types:</p>
 
 <ul>
-<li>LowCardinality: Prefer it over Enum when working with strings. It provides more flexibility in use and often reveals the same or higher efficiency</li>
+<li>LowCardinality: When the cardinality of your column is less than 10k then use this. Prefer it over Enum when working with strings. It provides more flexibility in use and often reveals the same or higher efficiency</li>
 <li>Array, Tuple, Map: You will find it very handy when transforming data using views for your common use cases</li>
 </ul>
 
+<aside class="notice">
+Clickhouse compresses the data in each column based on the data type, out-of-the-box. Clickhouse has system tables to help you analyze this. See compression ratios on the right. 
+</aside>
+
 <p>Note that some data types are case sensitive. For eg, <code>date</code> and <code>Date</code> both are valid types but that is not true for some data types. You can query a <a href="https://clickhouse.tech/docs/en/operations/system-tables/data_type_families/#system_tables-data_type_families">system table</a> to check this for any data type.</p>
 <h2 id='sorting-and-primary-key'>Sorting and primary key</h2>
+<blockquote>
+<p>Highlighting the relevant lines from the creation sql snippet</p>
+</blockquote>
+<div class="highlight"><pre class="highlight sql tab-sql"><code><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">ecommerce</span><span class="p">.</span><span class="n">events</span> 
+<span class="p">...</span>
+<span class="n">PARTITION</span> <span class="k">BY</span> <span class="n">toYYYYMMDD</span><span class="p">(</span><span class="nb">timestamp</span><span class="p">)</span>
+<span class="k">ORDER</span> <span class="k">BY</span> <span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">itemid</span><span class="p">,</span> <span class="nb">timestamp</span><span class="p">)</span>
+<span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">itemid</span><span class="p">);</span>
+
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">ecommerce</span><span class="p">.</span><span class="n">item_properties</span>
+<span class="p">...</span>
+<span class="k">ORDER</span> <span class="k">BY</span> <span class="p">(</span><span class="n">itemid</span><span class="p">,</span> <span class="n">property</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+<span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">(</span><span class="n">itemid</span><span class="p">,</span> <span class="n">property</span><span class="p">);</span>
+</code></pre></div>
 <p>Pre-requisite: Read this <a href="https://clickhouse.tech/docs/en/engines/table-engines/mergetree-family/mergetree">primer in docs</a> on how primary and sorting keys are used. </p>
 
 <p>Quoting highlights from the docs:</p>
@@ -498,73 +546,52 @@
 <p>We have added <code>timestamp</code> column to the sorting key in <code>events</code> table and <code>value</code> column in <code>item_properties</code> table because we may filter on those columns in certain queries. But because both these are high cardinality columns that can impact resource utilization. So we can omit them from the primary key.</p>
 <h2 id='compression-codecs'>Compression codecs</h2>
 <blockquote>
-<p>You can filter on <code>table</code> name as you like.</p>
+<p>I was able to improve compression ratio for only these columns through experimentation. Clickhouse picked the best algorithm for the rest out-of-the-box.</p>
 </blockquote>
-<div class="highlight"><pre class="highlight sql tab-sql"><code><span class="k">SELECT</span>
-    <span class="k">table</span><span class="p">,</span>
-    <span class="n">name</span><span class="p">,</span>
-    <span class="k">sum</span><span class="p">(</span><span class="n">data_compressed_bytes</span><span class="p">)</span> <span class="k">AS</span> <span class="n">comp</span><span class="p">,</span>
-    <span class="k">sum</span><span class="p">(</span><span class="n">data_uncompressed_bytes</span><span class="p">)</span> <span class="k">AS</span> <span class="n">uncomp</span><span class="p">,</span>
-    <span class="n">round</span><span class="p">((</span><span class="n">uncomp</span> <span class="o">/</span> <span class="n">comp</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span> <span class="k">AS</span> <span class="n">comp_ratio</span>
-<span class="k">FROM</span> <span class="k">system</span><span class="p">.</span><span class="n">columns</span>
-<span class="k">WHERE</span> <span class="k">database</span> <span class="o">=</span> <span class="s1">'ecommerce'</span> <span class="k">AND</span> <span class="n">startsWith</span><span class="p">(</span><span class="k">table</span><span class="p">,</span> <span class="s1">'.'</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
-<span class="k">GROUP</span> <span class="k">BY</span> <span class="k">table</span><span class="p">,</span> <span class="n">name</span>
-<span class="k">ORDER</span> <span class="k">BY</span> <span class="k">table</span><span class="p">,</span> <span class="n">name</span><span class="p">;</span>
+<div class="highlight"><pre class="highlight sql tab-sql"><code><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">ecommerce</span><span class="p">.</span><span class="n">item_properties</span>
+<span class="p">...</span>
+    <span class="k">version</span>         <span class="n">UInt32</span> <span class="n">MATERIALIZED</span> <span class="mi">9999999999</span> <span class="o">-</span> <span class="n">toUnixTimestamp</span><span class="p">(</span><span class="nb">timestamp</span><span class="p">)</span> <span class="n">Codec</span><span class="p">(</span><span class="n">Delta</span><span class="p">,</span> <span class="n">LZ4</span><span class="p">)</span>
+<span class="p">...</span>
+
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">ecommerce</span><span class="p">.</span><span class="n">category_tree</span>
+<span class="p">...</span>
+    <span class="n">categoryid</span>      <span class="n">UInt16</span> <span class="n">Codec</span><span class="p">(</span><span class="n">T64</span><span class="p">),</span>
+    <span class="n">parentid</span>        <span class="n">UInt16</span> <span class="n">Codec</span><span class="p">(</span><span class="n">T64</span><span class="p">)</span>
+<span class="p">...</span>
 </code></pre></div>
 <p>Pre-requisite: Read this <a href="https://clickhouse.tech/docs/en/sql-reference/statements/create/table/#codecs">primer in docs</a>.</p>
 
-<p>Try different codecs and decide which one to use based on the compression ratio. Clickhouse has system tables to help you analyze this. Here is the compression I could achieve for one of the tables.</p>
-
-<table><thead>
-<tr>
-<th>table</th>
-<th>name</th>
-<th>comp</th>
-<th>uncomp</th>
-<th>comp_ratio</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>item_properties</td>
-<td>itemid</td>
-<td>2117248</td>
-<td>51114948</td>
-<td>24.14</td>
-</tr>
-<tr>
-<td>item_properties</td>
-<td>property</td>
-<td>6581328</td>
-<td>25586875</td>
-<td>3.89</td>
-</tr>
-<tr>
-<td>item_properties</td>
-<td>timestamp</td>
-<td>32696898</td>
-<td>102229896</td>
-<td>3.13</td>
-</tr>
-<tr>
-<td>item_properties</td>
-<td>value</td>
-<td>104781287</td>
-<td>203559039</td>
-<td>1.94</td>
-</tr>
-<tr>
-<td>item_properties</td>
-<td>version</td>
-<td>22231770</td>
-<td>51114948</td>
-<td>2.3</td>
-</tr>
-</tbody></table>
-<h1 id='insert-data-into-tables'>Insert data into tables</h1><div class="highlight"><pre class="highlight shell"><code>clickhouse-client <span class="nt">--query</span> <span class="s2">"INSERT INTO ecommerce.events FORMAT CSVWithNames"</span> &lt; events.csv
+<p>Try different codecs and decide which one to use based on the compression ratio. The sql snippet in <a href="#column-data-type">column data type section</a> can be used to check compression ratio before and after a change. </p>
+<h1 id='insert-data-into-tables'>Insert data into tables</h1>
+<blockquote>
+<p>These are bash commands.</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell"><code>clickhouse-client <span class="nt">--query</span> <span class="s2">"INSERT INTO ecommerce.events FORMAT CSVWithNames"</span> &lt; events.csv
 clickhouse-client <span class="nt">--query</span> <span class="s2">"INSERT INTO ecommerce.item_properties (timestamp, itemid, property, value) FORMAT CSVWithNames"</span> &lt; item_properties_part1.csv
 clickhouse-client <span class="nt">--query</span> <span class="s2">"INSERT INTO ecommerce.item_properties (timestamp, itemid, property, value) FORMAT CSVWithNames"</span> &lt; item_properties_part2.csv
 clickhouse-client <span class="nt">--query</span> <span class="s2">"INSERT INTO ecommerce.category_tree FORMAT CSVWithNames"</span> &lt; category_tree.csv
-</code></pre></div><h1 id='prepare-for-query-create-views'>Prepare for query: Create views</h1><h2 id='get-latest-current-properties-of-item-using-aggregatingmergetree-engine'>Get latest/current properties of item using AggregatingMergeTree engine</h2><div class="highlight"><pre class="highlight sql tab-sql"><code><span class="k">CREATE</span> <span class="n">MATERIALIZED</span> <span class="k">VIEW</span> <span class="n">ecommerce</span><span class="p">.</span><span class="n">item_properties_latest_mv</span>
+</code></pre></div>
+<p>It takes upto 10s for clickhouse to ingest all the data. The <code>FORMAT CSVWithNames</code> phrase was needed because the first row of the CSV files contained the column names</p>
+<h1 id='create-views-for-queries'>Create views for queries</h1><h2 id='get-latest-current-properties-of-item'>Get latest/current properties of item</h2><div class="highlight"><pre class="highlight sql tab-sql"><code><span class="k">CREATE</span> <span class="n">MATERIALIZED</span> <span class="k">VIEW</span> <span class="n">ecommerce</span><span class="p">.</span><span class="n">item_properties_latest_mv</span>
+<span class="n">ENGINE</span> <span class="o">=</span> <span class="n">AggregatingMergeTree</span><span class="p">()</span>
+<span class="k">ORDER</span> <span class="k">BY</span> <span class="p">(</span><span class="n">itemid</span><span class="p">,</span> <span class="n">property</span><span class="p">)</span>
+<span class="n">POPULATE</span> <span class="k">AS</span> 
+    <span class="k">SELECT</span> 
+        <span class="n">argMax</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">timestamp</span><span class="p">)</span> <span class="k">as</span> <span class="n">latest_value</span><span class="p">,</span>
+        <span class="k">max</span><span class="p">(</span><span class="nb">timestamp</span><span class="p">)</span> <span class="k">as</span> <span class="n">latest_timestamp</span><span class="p">,</span>
+        <span class="n">itemid</span><span class="p">,</span>
+        <span class="n">property</span>
+    <span class="k">FROM</span> <span class="n">ecommerce</span><span class="p">.</span><span class="n">item_properties</span>
+    <span class="k">GROUP</span> <span class="k">BY</span> <span class="n">itemid</span><span class="p">,</span> <span class="n">property</span><span class="p">;</span>
+</code></pre></div><h3 id='aggregatingmergetree-table-engine'>AggregatingMergeTree table engine</h3>
+<p>ClickHouse merges all rows with the same sorting key with a single aggregated row (within one data part). Atleast one column must be of an AggregateFunction data type. In the SQL snippet latest_value &amp; latest_timestamp columns are of that type.</p>
+
+<p>HW: Read docs for <a href="https://clickhouse.tech/docs/en/engines/table-engines/mergetree-family/aggregatingmergetree/">AggregateMergeTree</a>.</p>
+<h3 id='aggregatefunction-data-type-amp-aggregate-functions'>AggregateFunction data type &amp; aggregate functions</h3>
+<p>Pre-requisite: Read docs for <a href="https://clickhouse.tech/docs/en/sql-reference/data-types/aggregatefunction/">AggregateFunction data type</a> and <a href="https://clickhouse.tech/docs/en/sql-reference/aggregate-functions/">aggregate functions</a> that return data of this type.</p>
+
+<p>For ex, <code>max(timestamp)</code> returns data of type <code>AggregateFunction(max, DateTime64(3))</code>.</p>
+<h3 id='state-amp-merge-combinators-of-aggregate-functions'>-State &amp; -Merge combinators of aggregate functions</h3><div class="highlight"><pre class="highlight sql tab-sql"><code><span class="k">CREATE</span> <span class="n">MATERIALIZED</span> <span class="k">VIEW</span> <span class="n">ecommerce</span><span class="p">.</span><span class="n">item_properties_latest_mv_state</span>
 <span class="n">ENGINE</span> <span class="o">=</span> <span class="n">AggregatingMergeTree</span><span class="p">()</span>
 <span class="k">ORDER</span> <span class="k">BY</span> <span class="p">(</span><span class="n">itemid</span><span class="p">,</span> <span class="n">property</span><span class="p">)</span>
 <span class="n">POPULATE</span> <span class="k">AS</span> 
@@ -582,12 +609,28 @@ clickhouse-client <span class="nt">--query</span> <span class="s2">"INSERT INTO 
     <span class="n">maxMerge</span><span class="p">(</span><span class="n">latest_timestamp</span><span class="p">)</span> <span class="k">as</span> <span class="nb">timestamp</span><span class="p">,</span>
     <span class="n">itemid</span><span class="p">,</span>
     <span class="n">property</span>
-<span class="k">FROM</span> <span class="n">ecommerce</span><span class="p">.</span><span class="n">item_properties_latest_mv</span>
+<span class="k">FROM</span> <span class="n">ecommerce</span><span class="p">.</span><span class="n">item_properties_latest_mv_state</span>
 <span class="k">GROUP</span> <span class="k">BY</span> <span class="n">itemid</span><span class="p">,</span> <span class="n">property</span><span class="p">;</span>
+
+<span class="k">CREATE</span> <span class="k">VIEW</span> <span class="n">ecommerce</span><span class="p">.</span><span class="n">item_category_latest</span> <span class="k">AS</span>
+<span class="k">SELECT</span> 
+    <span class="n">argMaxMerge</span><span class="p">(</span><span class="n">latest_value</span><span class="p">)</span> <span class="k">as</span> <span class="n">categoryid</span><span class="p">,</span>
+    <span class="n">itemid</span>
+<span class="k">FROM</span> <span class="n">ecommerce</span><span class="p">.</span><span class="n">item_properties_latest_mv_state</span>
+<span class="k">WHERE</span> <span class="n">property</span> <span class="o">=</span> <span class="s1">'categoryid'</span>
+<span class="k">GROUP</span> <span class="k">BY</span> <span class="n">itemid</span><span class="p">;</span>
 </code></pre></div>
-<p>Pre-requisite: Read docs for <a href="https://clickhouse.tech/docs/en/engines/table-engines/mergetree-family/aggregatingmergetree/">AggregateMergeTree</a></p>
-<h3 id='aggregate-functions'>Aggregate functions</h3>
-<p>Pre-requisite: Read docs for <a href="https://clickhouse.tech/docs/en/sql-reference/data-types/aggregatefunction/">aggregate functions</a> and then <a href="https://clickhouse.tech/docs/en/sql-reference/data-types/simpleaggregatefunction/">simple aggregate functions</a></p>
+<p>An aggregate function can have a combinator which changes the way it works. For example, the <code>State</code> suffix is used to represent intermediate state of applying a function. In this snippet, the latest_timestamp column is stored in binary form. The intermediate state is stored using a data structure that fits the function. For example a hash function is used for uniq(). </p>
+
+<p>The intermediate state can be materialized such that further computations on it can be run very efficiently &amp; flexibly. Multiple views may be created on top of the materialized view as demonstrated in this snippet. The <code>Merge</code> suffix merges the intermediate output into final values.</p>
+
+<p>HW: Read <code>If</code>, <code>State</code>, <code>Merge</code>, <code>MergeState</code> in <a href="https://clickhouse.tech/docs/en/sql-reference/aggregate-functions/combinators">docs</a>.</p>
+<h3 id='simpleaggregatefunction-amp-simple-combinator'>SimpleAggregateFunction &amp; -Simple combinator</h3>
+<p>Pre-requisite: Read docs for <a href="https://clickhouse.tech/docs/en/sql-reference/data-types/simpleaggregatefunction/">simple aggregate functions</a>.</p>
+
+<p>You can replace <code>max()</code> with <code>maxSimple()</code>, <code>maxState()</code> with <code>maxSimpleState()</code> in the above snippets and it will make the storage and queries slightly more efficient. </p>
+
+<p>HW: You can refer to altinity (a managed clickhouse provider) <a href="https://kb.altinity.com/altinity-kb-queries-and-syntax/simplestateif-or-ifstate-for-simple-aggregate-functions#q-what-is-simpleaggregatefunction-are-there-advantages-to-use-it-instead-of-aggregatefunction-in-aggregatingmergetree">knowledge base</a> to know more.</p>
 <h2 id='get-all-properties-in-one-row-using-array-amp-map-functions'>Get all properties in one row using Array &amp; Map functions</h2><div class="highlight"><pre class="highlight sql tab-sql"><code><span class="k">SET</span> <span class="n">allow_experimental_map_type</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
 <span class="k">CREATE</span> <span class="n">MATERIALIZED</span> <span class="k">VIEW</span> <span class="n">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">ecommerce</span><span class="p">.</span><span class="n">items_latest</span>
 <span class="n">ENGINE</span> <span class="o">=</span> <span class="k">Join</span><span class="p">(</span><span class="k">ANY</span><span class="p">,</span> <span class="k">INNER</span><span class="p">,</span> <span class="n">id</span><span class="p">)</span>
@@ -607,10 +650,20 @@ clickhouse-client <span class="nt">--query</span> <span class="s2">"INSERT INTO 
     <span class="p">)</span>
     <span class="k">ORDER</span> <span class="k">BY</span> <span class="n">id</span><span class="p">;</span>
 </code></pre></div><h3 id='query-settings'>Query settings</h3>
-<p>Since map is an experimental feature, we need to enable a setting to use it. You can set settings at different levels: cluster wide, per user, per session or per query.</p>
-<h3 id='grouparray'>groupArray()</h3><h3 id='join-engine'>Join engine</h3><h1 id='query-get-funnel-of-conversion'>Query: Get funnel of conversion</h1>
+<p>Since <code>map</code> is an experimental feature, we need to enable a setting to use it. You can set settings at different levels: cluster wide, per user, per session or per query.</p>
+<h3 id='grouparray-merge-multiple-rows-into-an-array'>groupArray(): merge multiple rows into an array</h3>
+<p><code>SELECT groupArray(col_x) ... GROUP BY col_y</code> does this - for all rows that have the same value in column y, extract all values in column x and put them in an array. </p>
+<h3 id='arrayjoin-unpack-an-array-into-multiple-rows'>arrayJoin(): unpack an array into multiple rows</h3>
+<p>It is useful to also learn about the function that can do the opposite of <code>groupArray()</code>. <code>arrayJoin(arr)</code> returns a table in which the first row is arr[0], second row is arr[1], and so on.</p>
+<h3 id='arraymap-merge-multiple-arrays-into-one-array'>arrayMap(): merge multiple arrays into one array</h3>
+<p><code>arrayMap(&lt;lambda_function&gt;, arr1, arr2)</code> returns a list where the first element is <lambda_function> applied to arr1[0] &amp; arr2[0], second element is <lambda_function> applied to arr1[1] &amp; arr2[2] &amp; so on. </p>
+<h3 id='join-engine'>Join engine</h3>
+<p>It is used to create a table/view that can be joined with another easily. If a table is expected to be joined with several other tables/views then you can use this engine to define the join type, strictness &amp; columns at one place rather than defining it in every join clause.</p>
+
+<p>HW: Read <a href="https://clickhouse.tech/docs/en/engines/table-engines/special/join/">docs</a>.</p>
+<h1 id='query-get-funnel-of-conversion'>Query: Get funnel of conversion</h1>
 <p>Let&#39;s explore a few approaches of filtering certain rows of a table and aggregating them. In typical data bases/warehouses you only have basic functions like the ones used in approach #1. Clickhouse provides you powerful functions like <code>retention()</code> and <code>sequenceCount()</code> that enable you to analyze click stream data with much simpler SQL queries. You will find that complexity goes down as we go from approach #1 to #3.</p>
-<h2 id='approach-1-using-summingmergetree-array-amp-map-functions'>Approach 1: Using SummingMergeTree, Array &amp; Map functions</h2><div class="highlight"><pre class="highlight sql tab-sql"><code><span class="k">CREATE</span> <span class="n">MATERIALIZED</span> <span class="k">VIEW</span> <span class="n">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">ecommerce</span><span class="p">.</span><span class="n">agg_events_by_item_mv</span>
+<h2 id='approach-1-using-summingmergetree-array-amp-map-functions'>Approach #1: Using SummingMergeTree, Array &amp; Map functions</h2><div class="highlight"><pre class="highlight sql tab-sql"><code><span class="k">CREATE</span> <span class="n">MATERIALIZED</span> <span class="k">VIEW</span> <span class="n">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">ecommerce</span><span class="p">.</span><span class="n">agg_events_by_item_mv</span>
 <span class="p">(</span>
     <span class="nv">`itemid`</span> <span class="n">UInt32</span><span class="p">,</span>
     <span class="nv">`event`</span> <span class="n">LowCardinality</span><span class="p">(</span><span class="n">String</span><span class="p">),</span>
@@ -625,10 +678,9 @@ clickhouse-client <span class="nt">--query</span> <span class="s2">"INSERT INTO 
     <span class="k">count</span><span class="p">(</span><span class="nb">timestamp</span><span class="p">)</span> <span class="k">AS</span> <span class="n">num_events</span><span class="p">,</span>
     <span class="n">uniq</span><span class="p">(</span><span class="n">visitorid</span><span class="p">)</span> <span class="k">AS</span> <span class="n">num_users</span>
 <span class="k">FROM</span> <span class="n">ecommerce</span><span class="p">.</span><span class="n">events</span>
-<span class="k">GROUP</span> <span class="k">BY</span> <span class="n">itemid</span><span class="p">,</span> <span class="n">event</span><span class="p">;</span> 
-</code></pre></div>
-<p>Step 1. get sum of events and users by event type and item</p>
-<div class="highlight"><pre class="highlight sql tab-sql"><code><span class="k">SET</span> <span class="n">allow_experimental_map_type</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="k">GROUP</span> <span class="k">BY</span> <span class="n">itemid</span><span class="p">,</span> <span class="n">event</span><span class="p">;</span>
+
+<span class="k">SET</span> <span class="n">allow_experimental_map_type</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
 <span class="k">create</span> <span class="k">view</span> <span class="n">agg_events_by_item_in_map</span> <span class="k">as</span>
 <span class="k">select</span>
     <span class="k">CAST</span> <span class="p">((</span><span class="n">num_events_arr</span><span class="p">.</span><span class="n">event</span><span class="p">,</span> <span class="n">num_events_arr</span><span class="p">.</span><span class="n">num_events</span><span class="p">),</span> <span class="s1">'Map(String, UInt32)'</span><span class="p">)</span> <span class="k">as</span> <span class="n">num_events_map</span><span class="p">,</span>
@@ -642,17 +694,19 @@ clickhouse-client <span class="nt">--query</span> <span class="s2">"INSERT INTO 
 <span class="k">group</span> <span class="k">by</span> <span class="n">itemid</span>
 <span class="p">)</span>
 <span class="k">order</span> <span class="k">by</span> <span class="n">itemid</span><span class="p">;</span>
-</code></pre></div>
-<p>Step 2. put it in a map like {&#39;a&#39;: 1,&#39;b&#39;: 9,&#39;c&#39;: 0} </p>
-<div class="highlight"><pre class="highlight sql tab-sql"><code></code></pre></div>
-<p>Step 3. compute conversion ratios using array elements &amp; split array elements into rows</p>
-<h2 id='approach-2-using-retention'>Approach #2: Using retention()</h2><div class="highlight"><pre class="highlight sql tab-sql"><code><span class="k">create</span> <span class="k">view</span> <span class="n">events_funnel_using_retention</span>
-<span class="k">SELECT</span>
+</code></pre></div><h3 id='step-1'>Step 1</h3>
+<p>Get sum of events and users by event type and item</p>
+<h3 id='step-2'>Step 2</h3>
+<p>Put it in a map like {&#39;a&#39;: 1,&#39;b&#39;: 9,&#39;c&#39;: 0} </p>
+<h3 id='step-3'>Step 3</h3>
+<p>Compute conversion ratios using array elements &amp; split array elements into rows. Implement this as HW. It&#39;s SQL snippet is not shared.</p>
+<h2 id='approach-2-using-retention'>Approach #2: Using retention()</h2><div class="highlight"><pre class="highlight sql tab-sql"><code><span class="k">create</span> <span class="k">view</span> <span class="n">events_funnel_using_retention</span> <span class="k">as</span>
+<span class="k">select</span>
     <span class="n">itemid</span><span class="p">,</span>
     <span class="k">sum</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">AS</span> <span class="n">r1</span><span class="p">,</span>
     <span class="k">sum</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="k">AS</span> <span class="n">r2</span><span class="p">,</span>
     <span class="k">sum</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="k">AS</span> <span class="n">r3</span>
-<span class="k">FROM</span> <span class="p">(</span>
+<span class="k">from</span> <span class="p">(</span>
 <span class="k">select</span> 
     <span class="n">itemid</span><span class="p">,</span>
     <span class="n">visitorid</span><span class="p">,</span>
@@ -729,64 +783,6 @@ clickhouse-client <span class="nt">--query</span> <span class="s2">"INSERT INTO 
 <span class="p">;</span>
 </code></pre></div>
 <p>Join with table containing latest category definition of each item.</p>
-<h1 id='errors'>Errors</h1>
-<aside class="notice">
-This error section is stored in a separate file in <code>includes/_errors.md</code>. Slate allows you to optionally separate out your docs into many files...just save them to the <code>includes</code> folder and add them to the top of your <code>index.md</code>'s frontmatter. Files are included in the order listed.
-</aside>
-
-<p>The Kittn API uses the following error codes:</p>
-
-<table><thead>
-<tr>
-<th>Error Code</th>
-<th>Meaning</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>400</td>
-<td>Bad Request -- Your request is invalid.</td>
-</tr>
-<tr>
-<td>401</td>
-<td>Unauthorized -- Your API key is wrong.</td>
-</tr>
-<tr>
-<td>403</td>
-<td>Forbidden -- The kitten requested is hidden for administrators only.</td>
-</tr>
-<tr>
-<td>404</td>
-<td>Not Found -- The specified kitten could not be found.</td>
-</tr>
-<tr>
-<td>405</td>
-<td>Method Not Allowed -- You tried to access a kitten with an invalid method.</td>
-</tr>
-<tr>
-<td>406</td>
-<td>Not Acceptable -- You requested a format that isn&#39;t json.</td>
-</tr>
-<tr>
-<td>410</td>
-<td>Gone -- The kitten requested has been removed from our servers.</td>
-</tr>
-<tr>
-<td>418</td>
-<td>I&#39;m a teapot.</td>
-</tr>
-<tr>
-<td>429</td>
-<td>Too Many Requests -- You&#39;re requesting too many kittens! Slow down!</td>
-</tr>
-<tr>
-<td>500</td>
-<td>Internal Server Error -- We had a problem with our server. Try again later.</td>
-</tr>
-<tr>
-<td>503</td>
-<td>Service Unavailable -- We&#39;re temporarily offline for maintenance. Please try again later.</td>
-</tr>
-</tbody></table>
 
       </div>
       <div class="dark-box">
