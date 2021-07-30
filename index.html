@@ -490,23 +490,31 @@ b. Conversion %<br></li>
 <p>Toggle to markdown tab to see output of this query. Notice the high compression ratio for integer, datetime and low cardinality data types.</p>
 </blockquote>
 <div class="highlight"><pre class="highlight sql tab-sql"><code><span class="k">SELECT</span>
-    <span class="k">table</span><span class="p">,</span>
+    <span class="k">type</span><span class="p">,</span>
     <span class="n">name</span><span class="p">,</span>
-    <span class="k">sum</span><span class="p">(</span><span class="n">data_compressed_bytes</span><span class="p">)</span> <span class="k">AS</span> <span class="n">comp</span><span class="p">,</span>
-    <span class="k">sum</span><span class="p">(</span><span class="n">data_uncompressed_bytes</span><span class="p">)</span> <span class="k">AS</span> <span class="n">uncomp</span><span class="p">,</span>
-    <span class="n">round</span><span class="p">((</span><span class="n">uncomp</span> <span class="o">/</span> <span class="n">comp</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span> <span class="k">AS</span> <span class="n">comp_ratio</span>
+    <span class="n">formatReadableSize</span><span class="p">(</span><span class="k">sum</span><span class="p">(</span><span class="n">data_compressed_bytes</span><span class="p">))</span> <span class="k">AS</span> <span class="n">comp</span><span class="p">,</span>
+    <span class="n">formatReadableSize</span><span class="p">(</span><span class="k">sum</span><span class="p">(</span><span class="n">data_uncompressed_bytes</span><span class="p">))</span> <span class="k">AS</span> <span class="n">uncomp</span><span class="p">,</span>
+    <span class="n">round</span><span class="p">((</span><span class="k">sum</span><span class="p">(</span><span class="n">data_uncompressed_bytes</span><span class="p">)</span> <span class="o">/</span> <span class="k">sum</span><span class="p">(</span><span class="n">data_compressed_bytes</span><span class="p">)),</span> <span class="mi">2</span><span class="p">)</span> <span class="k">AS</span> <span class="n">comp_ratio</span>
 <span class="k">FROM</span> <span class="k">system</span><span class="p">.</span><span class="n">columns</span>
 <span class="k">WHERE</span> <span class="k">database</span> <span class="o">=</span> <span class="s1">'ecommerce'</span> <span class="k">AND</span> <span class="k">table</span> <span class="o">=</span> <span class="s1">'item_properties'</span>
-<span class="k">GROUP</span> <span class="k">BY</span> <span class="k">table</span><span class="p">,</span> <span class="n">name</span>
-<span class="k">ORDER</span> <span class="k">BY</span> <span class="k">table</span><span class="p">,</span> <span class="n">name</span><span class="p">;</span>
-</code></pre></div><div class="highlight"><pre class="highlight markdown tab-markdown"><code>table | name | comp | uncomp | comp_ratio
------ | ---- | ---- | ------ | ----------
-item_properties | itemid | 2117248 | 51114948 | 24.14
-item_properties | property | 6581328 | 25586875 | 3.89
-item_properties | timestamp | 32696898 | 102229896 | 3.13
-item_properties | value | 104781287 | 203559039 | 1.94
-item_properties | version | 22231770 | 51114948 | 2.3
+<span class="k">GROUP</span> <span class="k">BY</span> <span class="k">type</span><span class="p">,</span> <span class="n">name</span>
+<span class="k">ORDER</span> <span class="k">BY</span> <span class="n">comp_ratio</span><span class="p">;</span>
+</code></pre></div><div class="highlight"><pre class="highlight markdown tab-markdown"><code>┌─type───────────────────┬─name──────┬─comp──────┬─uncomp─────┬─comp_ratio─┐
+│ UInt32                 │ itemid    │ 2.02 MiB  │ 48.75 MiB  │      24.14 │
+│ LowCardinality(String) │ property  │ 6.28 MiB  │ 24.40 MiB  │       3.89 │
+│ DateTime64(3)          │ timestamp │ 31.18 MiB │ 97.49 MiB  │       3.13 │
+│ UInt32                 │ version   │ 21.20 MiB │ 48.75 MiB  │       2.30 │
+│ String                 │ value     │ 99.93 MiB │ 194.13 MiB │       1.94 │
+└────────────────────────┴───────────┴───────────┴────────────┴────────────┘
 </code></pre></div>
+<!-- type | name | comp | uncomp | comp_ratio
+----- | ---- | ---- | ------ | ----------
+UInt32 | itemid | 2117248 | 51114948 | 24.14
+LowCardinality(String) | property | 6581328 | 25586875 | 3.89
+DateTime64(3) | timestamp | 32696898 | 102229896 | 3.13
+UInt32 | version | 22231770 | 51114948 | 2.3
+String | value | 104781287 | 203559039 | 1.94 -->
+
 <p>UInt, Float, String and DateTime will fulfill most of your needs but here are some other extremely useful types:</p>
 
 <ul>
